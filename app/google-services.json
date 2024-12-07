@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "780265663720",
+    "project_id": "etahlilprojem",
+    "storage_bucket": "etahlilprojem.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:780265663720:android:d71c4e21d2b14373aa6d5d",
+        "android_client_info": {
+          "package_name": "com.example.e_tahlil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy7P9a8lbxOPkMrUT7uH3XvzQnCSSct_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
