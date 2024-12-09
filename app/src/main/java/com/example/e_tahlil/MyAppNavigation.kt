@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.example.e_tahlil.pages.HomePage
 import com.example.e_tahlil.pages.LoginPage
 import com.example.e_tahlil.pages.SignupPage
+import com.example.e_tahlil.pages.admin.AdminHomePage
 
 @Composable
 fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel){
@@ -34,6 +35,12 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel){
 
             HomePage(modifier,navController,authViewModel)
 
+
+
+        }
+        composable("adminhome") {
+
+            AdminHomePage(modifier,navController,authViewModel)
 
 
         }

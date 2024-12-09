@@ -35,20 +35,28 @@ fun SignupPage(modifier: Modifier=Modifier, navController: NavController, authVi
     var password by remember { mutableStateOf("") }
 
     val authState=authViewModel.authState.observeAsState()
+    val userRole=authViewModel.userRole.observeAsState()
     val context=LocalContext.current
-    LaunchedEffect (authState.value  ){
-
-        when(authState.value){
-            is AuthState.Authenticated->navController.navigate("home")
-            is AuthState.Error-> Toast.makeText(context,
-                (authState.value as AuthState.Error).message,Toast.LENGTH_SHORT).show()
-            else-> Unit
+    LaunchedEffect(authState.value, userRole.value) {
+        when (authState.value) {
+            is AuthState.Authenticated -> {
+                if (userRole.value == "admin") {
+                    navController.navigate("adminhome")
+                } else if (userRole.value == "user") {
+                    navController.navigate("home")
+                } else {
+                    // Rol alınmadıysa bekleyebilir veya hata gösterebilirsin
+                    println("Rol bilgisi alınamadı.")
+                }
+            }
+            is AuthState.Error -> Toast.makeText(
+                context,
+                (authState.value as AuthState.Error).message,
+                Toast.LENGTH_SHORT
+            ).show()
+            else -> Unit
         }
-
-
-
     }
-
     Column(modifier=Modifier.fillMaxSize(),
         verticalArrangement= Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +85,7 @@ fun SignupPage(modifier: Modifier=Modifier, navController: NavController, authVi
 
         Button(onClick ={
             authViewModel.signup(email,password)
-        } ) {
+        } ,enabled = authState.value!=AuthState.Loading) {
 
             Text("Kayıt Ol")
         }
