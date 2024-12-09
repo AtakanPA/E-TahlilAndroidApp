@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,11 +22,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.e_tahlil.AuthState
 import com.example.e_tahlil.AuthViewModel
+
 
 @Composable
 fun SignupPage(modifier: Modifier=Modifier, navController: NavController, authViewModel: AuthViewModel)
@@ -33,6 +37,9 @@ fun SignupPage(modifier: Modifier=Modifier, navController: NavController, authVi
 
     var email by remember{ mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var surname by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf(0) }
 
     val authState=authViewModel.authState.observeAsState()
     val userRole=authViewModel.userRole.observeAsState()
@@ -82,9 +89,37 @@ fun SignupPage(modifier: Modifier=Modifier, navController: NavController, authVi
 
             },)
         Spacer(modifier=Modifier.height(16.dp));
+        OutlinedTextField(value = name, onValueChange = {
+            name=it
+        },
+            label = {
+                Text("Ad")
+
+
+            },)
+        Spacer(modifier=Modifier.height(16.dp));
+        OutlinedTextField(value = surname, onValueChange = {
+            surname=it
+        },
+            label = {
+                Text("Soyad")
+
+
+            },)
+        Spacer(modifier=Modifier.height(16.dp));
+        OutlinedTextField(value = age.toString(), onValueChange = {
+            age=it.toInt()
+        },
+            label = {
+                Text("Yaş")
+
+
+            }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        Spacer(modifier=Modifier.height(16.dp));
 
         Button(onClick ={
-            authViewModel.signup(email,password)
+            authViewModel.signup(email,password,name,surname,age)
         } ,enabled = authState.value!=AuthState.Loading) {
 
             Text("Kayıt Ol")

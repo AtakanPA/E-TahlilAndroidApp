@@ -1,5 +1,6 @@
 package com.example.e_tahlil
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -84,8 +85,8 @@ class AuthViewModel:ViewModel() {
         }
 
     }
-    fun signup(email:String,password:String){
-        if(email.isEmpty()||password.isEmpty()) {
+    fun signup(email:String,password:String,name:String,surname:String,age:Int){
+        if(email.isEmpty()||password.isEmpty()||name.isEmpty()||surname.isEmpty()||age==0) {
             _authState.value=AuthState.Error("Email ve şifre boş olamaz")
             return
 
@@ -96,14 +97,22 @@ class AuthViewModel:ViewModel() {
                 task->
             if(task.isSuccessful){
                 _authState.value=AuthState.Authenticated
-                auth.currentUser?.uid?.let { uid->
+                auth.currentUser?.uid?.let { uid ->
+                    val userData = mapOf(
+                        "name" to name,
+                        "surname" to surname,
+                        "age" to age,
+                        "role" to "user"
+                    )
 
-                    firestore.collection("users").document(uid).set(mapOf("role" to "user"))
+                    firestore.collection("users").document(uid).set(userData)
                         .addOnSuccessListener {
-                            fetchUserRole(uid);
-
+                            fetchUserRole(uid)
+                            Log.d("Firestore", "Kullanıcı başarıyla kaydedildi: $userData")
                         }
-
+                        .addOnFailureListener { exception ->
+                            Log.e("Firestore", "Kullanıcı kaydedilemedi", exception)
+                        }
                 }
             }
             else{

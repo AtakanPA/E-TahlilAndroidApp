@@ -11,10 +11,11 @@ import com.example.e_tahlil.pages.HomePage
 import com.example.e_tahlil.pages.LoginPage
 import com.example.e_tahlil.pages.SignupPage
 import com.example.e_tahlil.pages.admin.AdminHomePage
+import com.example.e_tahlil.pages.admin.AdminLayout
 
 @Composable
-fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel){
-    val navController:NavHostController=rememberNavController()
+fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navController: NavHostController){
+
     NavHost(navController=navController, startDestination = "login"){
 
         composable("login") {
@@ -40,10 +41,22 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel){
         }
         composable("adminhome") {
 
-            AdminHomePage(modifier,navController,authViewModel)
+          AdminHomePage( modifier,navController,authViewModel)
 
 
         }
     }
+
+
+
+
+    fun navigateTo(route:String){
+
+
+        navController.navigate("$route")
+
+
+    }
+
 
 }

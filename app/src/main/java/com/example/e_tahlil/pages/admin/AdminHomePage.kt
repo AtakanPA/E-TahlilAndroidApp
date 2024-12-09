@@ -1,12 +1,17 @@
 package com.example.e_tahlil.pages.admin
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.e_tahlil.AuthState
 import com.example.e_tahlil.AuthViewModel
@@ -33,14 +38,17 @@ fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, a
     }
 
 
-    Column {
+    Column(modifier) {
+        Column (modifier=Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+            ){ Button(onClick = {}) {
+                Text(text = "Tahlil Sonucu Gir")
+
+        } }
 
 
-        Column {
-            Button(onClick = { authViewModel.signout() }) { }
 
-        }
-        Text("Admin Home Page")
+
     }
 
 }
