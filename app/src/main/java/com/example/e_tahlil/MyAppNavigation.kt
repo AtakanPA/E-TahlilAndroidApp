@@ -12,6 +12,7 @@ import com.example.e_tahlil.pages.LoginPage
 import com.example.e_tahlil.pages.SignupPage
 import com.example.e_tahlil.pages.admin.AdminHomePage
 import com.example.e_tahlil.pages.admin.AdminLayout
+import com.example.e_tahlil.pages.admin.HastaAraPage
 
 @Composable
 fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navController: NavHostController){
@@ -42,6 +43,12 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navC
         composable("adminhome") {
 
           AdminHomePage( modifier,navController,authViewModel)
+
+
+        }
+        composable("hastaara") {
+
+            HastaAraPage( modifier,navController,authViewModel)
 
 
         }

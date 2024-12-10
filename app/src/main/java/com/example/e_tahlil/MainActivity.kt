@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.e_tahlil.pages.admin.AdminLayout
 import com.example.e_tahlil.ui.theme.ETahlilTheme
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         val authViewModel:AuthViewModel by viewModels()
-
+        val adminViewModel: AdminViewModel by viewModels()
         setContent {
             ETahlilTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
