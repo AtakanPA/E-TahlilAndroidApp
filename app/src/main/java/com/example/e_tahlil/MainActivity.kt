@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ETahlilTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   AdminLayout(modifier = Modifier.padding(innerPadding),authViewModel)
+                   AdminLayout(modifier = Modifier.padding(innerPadding),authViewModel,adminViewModel)
                 }
             }
         }

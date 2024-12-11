@@ -46,10 +46,7 @@ fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, a
             horizontalAlignment = Alignment.CenterHorizontally
             ){
 
-            Button(onClick = {},modifier=Modifier.fillMaxWidth(0.5f)) {
-                Text(text = "Tahlil Sonucu Gir")
 
-        }
         Button(onClick ={},modifier=Modifier.fillMaxWidth(0.5f)) {
 
             Text("Kılavız Ekle")

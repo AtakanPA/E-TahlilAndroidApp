@@ -39,7 +39,7 @@ fun SignupPage(modifier: Modifier=Modifier, navController: NavController, authVi
     var password by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
-    var age by remember { mutableStateOf(0) }
+    var age by remember { mutableStateOf("") }
 
     val authState=authViewModel.authState.observeAsState()
     val userRole=authViewModel.userRole.observeAsState()
@@ -107,8 +107,8 @@ fun SignupPage(modifier: Modifier=Modifier, navController: NavController, authVi
 
             },)
         Spacer(modifier=Modifier.height(16.dp));
-        OutlinedTextField(value = age.toString(), onValueChange = {
-            age=it.toInt()
+        OutlinedTextField(value = age, onValueChange = {
+            age=it
         },
             label = {
                 Text("Yaş")

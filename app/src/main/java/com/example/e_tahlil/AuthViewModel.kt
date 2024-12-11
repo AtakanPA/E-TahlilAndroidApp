@@ -85,8 +85,8 @@ class AuthViewModel:ViewModel() {
         }
 
     }
-    fun signup(email:String,password:String,name:String,surname:String,age:Int){
-        if(email.isEmpty()||password.isEmpty()||name.isEmpty()||surname.isEmpty()||age==0) {
+    fun signup(email:String,password:String,name:String,surname:String,age:String){
+        if(email.isEmpty()||password.isEmpty()||name.isEmpty()||surname.isEmpty()||age.isEmpty()) {
             _authState.value=AuthState.Error("Email ve şifre boş olamaz")
             return
 

@@ -4,6 +4,6 @@ data class Hasta(
     var hastaId: String = "",
     var name: String = "",
     var surname: String = "",
-    var age: Int = 0,
+    var age: String = "",
     var tahlilList: List<Tahlil> = emptyList()
 )

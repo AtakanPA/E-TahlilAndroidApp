@@ -13,9 +13,11 @@ import com.example.e_tahlil.pages.SignupPage
 import com.example.e_tahlil.pages.admin.AdminHomePage
 import com.example.e_tahlil.pages.admin.AdminLayout
 import com.example.e_tahlil.pages.admin.HastaAraPage
+import com.example.e_tahlil.pages.admin.HastaDetayPage
+import com.example.e_tahlil.pages.admin.TahlilEklePage
 
 @Composable
-fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navController: NavHostController){
+fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navController: NavHostController,adminViewModel: AdminViewModel){
 
     NavHost(navController=navController, startDestination = "login"){
 
@@ -48,22 +50,23 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navC
         }
         composable("hastaara") {
 
-            HastaAraPage( modifier,navController,authViewModel)
+            HastaAraPage( modifier = modifier, navController = navController, authViewModel = authViewModel, adminViewModel = adminViewModel)
 
+
+        }
+        composable("hastadetay")
+        {
+            HastaDetayPage(navController, authViewModel, adminViewModel, modifier = modifier)
+
+        }
+        composable("tahlilekle") {
+            TahlilEklePage(modifier,navController,authViewModel,adminViewModel)
 
         }
     }
 
 
 
-
-    fun navigateTo(route:String){
-
-
-        navController.navigate("$route")
-
-
-    }
 
 
 }

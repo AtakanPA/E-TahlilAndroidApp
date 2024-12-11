@@ -23,13 +23,14 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.e_tahlil.AdminViewModel
 import com.example.e_tahlil.AuthViewModel
 import com.example.e_tahlil.MyAppNavigation
 
 
 @SuppressLint("RestrictedApi")
 @Composable
-fun AdminLayout(modifier: Modifier, authViewModel: AuthViewModel){
+fun AdminLayout(modifier: Modifier, authViewModel: AuthViewModel,adminViewModel: AdminViewModel){
    val navController=rememberNavController()
     Scaffold (topBar = {
 
@@ -38,7 +39,7 @@ fun AdminLayout(modifier: Modifier, authViewModel: AuthViewModel){
 
     }, content = {
         paddingValues ->
-        MyAppNavigation(modifier=Modifier.padding(paddingValues),authViewModel=authViewModel,navController)
+        MyAppNavigation(modifier=Modifier.padding(paddingValues),authViewModel=authViewModel,navController,adminViewModel)
 
 
     }, bottomBar = {
@@ -66,7 +67,7 @@ fun AdminLayout(modifier: Modifier, authViewModel: AuthViewModel){
                             // reselecting the same item
                             launchSingleTop = true
                             // Restore state when reselecting a previously selected item
-                            restoreState = true
+                            restoreState = false
                         }
                     }
                 )
