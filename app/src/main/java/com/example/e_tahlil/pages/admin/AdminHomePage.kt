@@ -47,7 +47,9 @@ fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, a
             ){
 
 
-        Button(onClick ={},modifier=Modifier.fillMaxWidth(0.5f)) {
+        Button(onClick ={
+            navController.navigate("kilavuzekle")
+        },modifier=Modifier.fillMaxWidth(0.5f)) {
 
             Text("Kılavız Ekle")
 

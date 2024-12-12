@@ -14,6 +14,7 @@ import com.example.e_tahlil.pages.admin.AdminHomePage
 import com.example.e_tahlil.pages.admin.AdminLayout
 import com.example.e_tahlil.pages.admin.HastaAraPage
 import com.example.e_tahlil.pages.admin.HastaDetayPage
+import com.example.e_tahlil.pages.admin.KilavuzEklePage
 import com.example.e_tahlil.pages.admin.TahlilEklePage
 
 @Composable
@@ -61,6 +62,12 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navC
         }
         composable("tahlilekle") {
             TahlilEklePage(modifier,navController,authViewModel,adminViewModel)
+
+        }
+        composable("kilavuzekle"){
+
+                KilavuzEklePage(modifier,navController,authViewModel,adminViewModel)
+
 
         }
     }
