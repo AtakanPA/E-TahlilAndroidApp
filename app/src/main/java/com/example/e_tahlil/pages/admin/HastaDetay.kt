@@ -7,11 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+
+
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -23,73 +27,56 @@ import com.example.e_tahlil.AdminViewModel
 import com.example.e_tahlil.AuthViewModel
 
 @Composable
-fun HastaDetayPage(navController: NavController, authViewModel: AuthViewModel, adminViewModel: AdminViewModel, modifier: Modifier) {
-
-
+fun HastaDetayPage(
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    adminViewModel: AdminViewModel,
+    modifier: Modifier = Modifier
+) {
     val hasta = adminViewModel.hasta.observeAsState()
 
-    Column(modifier = modifier) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Hasta Temel Bilgileri
-            Text("Hasta Adı: ${hasta.value?.name}")
-            Text("Hasta Soyadı: ${hasta.value?.surname}")
-            Text("Hasta Yaşı: ${hasta.value?.age}")
+    Column(
+        modifier = modifier.fillMaxSize().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Hasta Adı: ${hasta.value?.name}")
+        Text("Hasta Soyadı: ${hasta.value?.surname}")
+        Text("Hasta Yaşı: ${hasta.value?.age}")
 
-            Spacer(modifier = Modifier.height(16.dp)) // Biraz boşluk bırak
+        Spacer(modifier = Modifier.height(16.dp))
 
-            // Tahlil Listesi Başlığı
-            Text("Tahlil Detayları", style = MaterialTheme.typography.h6)
+        Text("Tahlil Detayları", style = MaterialTheme.typography.bodySmall)
 
-            // Tahlil Listesi
-            if (hasta.value?.tahlilList.isNullOrEmpty()) {
-                Text("Henüz tahlil eklenmedi.")
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState()), // Uzun listeyi kaydırılabilir yap
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    hasta.value?.tahlilList?.forEach { tahlil ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            elevation = 4.dp
-                        ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text("IgA: ${tahlil.IgA}")
-                                Text("IgG: ${tahlil.IgG}")
-                                Text("IgM: ${tahlil.IgM}")
-                                Text("Tahlil Tarihi: ${tahlil.date.toDate()}")
-                            }
+        if (hasta.value?.tahlilList.isNullOrEmpty()) {
+            Text("Henüz tahlil eklenmedi.")
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(hasta.value?.tahlilList ?: emptyList()) { tahlil ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(4.dp),
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text("IgA: ${tahlil.IgA}")
+                            Text("IgG: ${tahlil.IgG}")
+                            Text("IgM: ${tahlil.IgM}")
+                            Text("Tahlil Tarihi: ${tahlil.date.toDate()}")
                         }
                     }
                 }
             }
+        }
 
-            // Tahlil Ekle Butonu
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                Button(
-                    onClick = {
-                        navController.navigate("tahlilekle")
-                        },
-                    modifier = Modifier.fillMaxWidth(0.5f)
-                ) {
-                    Text("Tahlil Ekle")
-                }
-            }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { navController.navigate("tahlilekle") },
+            modifier = Modifier.fillMaxWidth(0.5f)
+        ) {
+            Text("Tahlil Ekle")
         }
     }
-
 }

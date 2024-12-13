@@ -5,5 +5,5 @@ data class Hasta(
     var name: String = "",
     var surname: String = "",
     var age: String = "",
-    var tahlilList: List<Tahlil> = emptyList()
+    var tahlilList: List<Tahlil> ?= emptyList()
 )

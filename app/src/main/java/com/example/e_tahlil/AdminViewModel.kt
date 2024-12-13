@@ -1,85 +1,121 @@
 package com.example.e_tahlil
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-class AdminViewModel: ViewModel(){
+class AdminViewModel : ViewModel() {
 
-    private val firestore:FirebaseFirestore=FirebaseFirestore.getInstance()
-    val _hasta= MutableLiveData<Hasta?>()
-    val hasta:MutableLiveData<Hasta?> = _hasta
-    fun TahlilEkle()
-    {
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val _hasta = MutableLiveData<Hasta?>()
+    val hasta: MutableLiveData<Hasta?> = _hasta
 
-
-
-
-    }
     fun HastaVeTahlilGetir(name: String, surname: String) {
-        HastaAra(name, surname)
-        hasta.observeForever { hasta ->
-            hasta?.let {
-                TahlilleriGetir(it.hastaId)
+        viewModelScope.launch(Dispatchers.IO) {
+            val hasta = HastaAra(name, surname)
+            if (hasta != null) {
+                val tahlilList = TahlilleriGetir(hasta.hastaId)
+                _hasta.postValue(hasta.copy(tahlilList = tahlilList))
+            } else {
+                _hasta.postValue(null)
             }
         }
     }
-    fun TahlilleriGetir(hastaId: String?) {
+
+    private suspend fun HastaAra(name: String, surname: String): Hasta? {
+        return try {
+            val documents = firestore.collection("users")
+                .whereEqualTo("name", name)
+                .whereEqualTo("surname", surname)
+                .get()
+                .await()
+
+            if (!documents.isEmpty) {
+                val document = documents.documents.first()
+                val hastaId = document.id
+                document.toObject(Hasta::class.java)?.copy(hastaId = hastaId)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("HastaAra", "Hata: ${e.message}", e)
+            null
+        }
+    }
+
+    private suspend fun TahlilleriGetir(hastaId: String?): List<Tahlil>? {
         if (hastaId.isNullOrEmpty()) {
-            Log.e("Error", "Hasta ID boş veya null")
-            return
+            Log.e("TahlilleriGetir", "Hasta ID boş veya null")
+            return null
         }
 
-        firestore.collection("users")
-            .document(hastaId)
-            .collection("tahlil")
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val tahlilList = documents.toObjects(Tahlil::class.java)
-                    _hasta.value = _hasta.value?.copy(tahlilList = tahlilList)
-                }
+        return try {
+            val documents = firestore.collection("users")
+                .document(hastaId)
+                .collection("tahlil")
+                .get()
+                .await()
+
+            if (!documents.isEmpty) {
+                documents.toObjects(Tahlil::class.java)
+            } else {
+                emptyList()
             }
-            .addOnFailureListener { exception ->
-                exception.printStackTrace()
-            }
+        } catch (e: Exception) {
+            Log.e("TahlilleriGetir", "Hata: ${e.message}", e)
+            null
+        }
     }
+
+    fun KilavuzEkle(guide: Guide) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (guide.name.isEmpty() || guide.ageGroups.isEmpty()) {
+                Log.e("KilavuzEkle", "Kılavuz adı veya yaş grubu boş")
+                return@launch
+            }
+
+            try {
+                firestore.collection("kilavuzlar").add(guide).await()
+                Log.d("KilavuzEkle", "Kılavuz başarıyla eklendi")
+            } catch (e: Exception) {
+                Log.e("KilavuzEkle", "Kılavuz ekleme başarısız: ${e.message}", e)
+            }
+        }
+    }
+
     fun TahlilEkle(hastaId: String, tahlil: Tahlil) {
-        if (hastaId.isEmpty()) {
-            Log.e("Error", "Hasta ID boş")
-            return
-        }
+        viewModelScope.launch(Dispatchers.IO) {
+            if (hastaId.isEmpty() || isTahlilEmpty(tahlil)) {
+                Log.e("TahlilEkle", "Hasta ID boş veya tahlil verileri eksik")
+                return@launch
+            }
 
-        firestore.collection("users")
-            .document(hastaId)
-            .collection("tahlil")
-            .add(tahlil) // Tahlil nesnesini ekle
-            .addOnSuccessListener { documentReference ->
-                Log.d("TahlilEkle", "Tahlil başarıyla eklendi: ${documentReference.id}")
+            try {
+                firestore.collection("users")
+                    .document(hastaId)
+                    .collection("tahlil")
+                    .add(tahlil)
+                    .await()
+
+                Log.d("TahlilEkle", "Tahlil başarıyla eklendi")
+            } catch (e: Exception) {
+                Log.e("TahlilEkle", "Tahlil ekleme başarısız: ${e.message}", e)
             }
-            .addOnFailureListener { exception ->
-                Log.e("TahlilEkle", "Tahlil ekleme başarısız", exception)
-            }
+        }
     }
-    fun HastaAra(name: String, surname: String) {
-        firestore.collection("users")
-            .whereEqualTo("name", name)
-            .whereEqualTo("surname", surname)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val hastaGelen = documents.documents.first()
-                    val hastaId = hastaGelen.id // Belge ID'sini alın
-                    _hasta.value = hastaGelen.toObject(Hasta::class.java)?.copy(hastaId = hastaId)
-                } else {
-                    _hasta.value = null // No match found
-                }
-            }
-            .addOnFailureListener { exception ->
-                _hasta.value = null
-                exception.printStackTrace()
-            }
+
+    private fun isTahlilEmpty(tahlil: Tahlil): Boolean {
+        return tahlil.IgA.isEmpty() &&
+                tahlil.IgG.isEmpty() &&
+                tahlil.IgG1.isEmpty() &&
+                tahlil.IgG2.isEmpty() &&
+                tahlil.IgG3.isEmpty() &&
+                tahlil.IgG4.isEmpty() &&
+                tahlil.IgM.isEmpty()
     }
 }
