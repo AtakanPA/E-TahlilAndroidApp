@@ -1,5 +1,6 @@
 package com.example.e_tahlil
 
+import KilavuzEklePage
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -12,10 +13,11 @@ import com.example.e_tahlil.pages.LoginPage
 import com.example.e_tahlil.pages.SignupPage
 import com.example.e_tahlil.pages.admin.AdminHomePage
 import com.example.e_tahlil.pages.admin.AdminLayout
+import com.example.e_tahlil.pages.admin.DegerAraPage
 import com.example.e_tahlil.pages.admin.HastaAraPage
 import com.example.e_tahlil.pages.admin.HastaDetayPage
-import com.example.e_tahlil.pages.admin.KilavuzEklePage
-import com.example.e_tahlil.pages.admin.TahlilEklePage
+
+
 
 @Composable
 fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navController: NavHostController,adminViewModel: AdminViewModel){
@@ -45,7 +47,7 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navC
         }
         composable("adminhome") {
 
-          AdminHomePage( modifier,navController,authViewModel)
+          AdminHomePage( modifier,navController,authViewModel,adminViewModel)
 
 
         }
@@ -60,13 +62,16 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navC
             HastaDetayPage(navController, authViewModel, adminViewModel, modifier = modifier)
 
         }
-        composable("tahlilekle") {
-            TahlilEklePage(modifier,navController,authViewModel,adminViewModel)
 
-        }
         composable("kilavuzekle"){
 
                 KilavuzEklePage(modifier,navController,authViewModel,adminViewModel)
+
+
+        }
+        composable("degerara"){
+
+            DegerAraPage(modifier,navController,authViewModel,adminViewModel)
 
 
         }

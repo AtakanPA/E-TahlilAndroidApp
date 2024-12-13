@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +22,7 @@ import com.example.e_tahlil.AuthState
 import com.example.e_tahlil.AuthViewModel
 
 @Composable
-fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel) {
+fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel,adminView: AdminViewModel) {
 
 
     val authState=authViewModel.authState.observeAsState()
@@ -39,7 +41,7 @@ fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, a
         }
 
     }
-
+    val kilavuzlar by adminView.kilavuzlar.observeAsState(initial = emptyList())
 
     Column(modifier) {
         Column (modifier=Modifier.fillMaxSize(),
@@ -64,6 +66,13 @@ fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, a
 
            }
 
+            LazyColumn {
+                kilavuzlar?.let {
+                    items(it.size) { index -> // Şimdi doğru çalışır
+                        Text(text = "Kılavuz Adı: ${kilavuzlar?.get(index)?.name}")
+                    }
+                }
+            }
 
         }
 

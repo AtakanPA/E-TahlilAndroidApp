@@ -1,6 +1,7 @@
 package com.example.e_tahlil
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +15,27 @@ class AdminViewModel : ViewModel() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _hasta = MutableLiveData<Hasta?>()
     val hasta: MutableLiveData<Hasta?> = _hasta
+    private val _kilavuzlar = MutableLiveData<List<Guide>?>()
+    val kilavuzlar: LiveData<List<Guide>?> = _kilavuzlar
 
+    init {
+        KilavuzlariGercekZamanliDinle()
+    }
+    fun KilavuzlariGercekZamanliDinle() {
+        firestore.collection("kilavuzlar").addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.e("KilavuzlariDinle", "Dinleme hatası: ${e.message}", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && !snapshot.isEmpty) {
+                val guides = snapshot.toObjects(Guide::class.java)
+                _kilavuzlar.postValue(guides) // LiveData'yı güncelliyoruz
+            } else {
+                _kilavuzlar.postValue(emptyList()) // Boş bir liste gönder
+            }
+        }
+    }
     fun HastaVeTahlilGetir(name: String, surname: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val hasta = HastaAra(name, surname)
@@ -71,16 +92,37 @@ class AdminViewModel : ViewModel() {
             null
         }
     }
+    private suspend fun KilavuzlariGetir():List<Guide>? {
 
+        return try {
+
+            val documents=firestore.collection("kilavuzlar").get().await()
+            if(!documents.isEmpty){
+
+
+                documents.toObjects(Guide::class.java)
+            }else{
+                emptyList()
+
+            }
+
+        }catch (e: Exception) {
+            Log.e("Kilavuzlari Getir", "Hata: ${e.message}", e)
+            null
+        }
+
+    }
     fun KilavuzEkle(guide: Guide) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (guide.name.isEmpty() || guide.ageGroups.isEmpty()) {
+            if (guide.name.isEmpty() || guide.degerler.isEmpty()) {
                 Log.e("KilavuzEkle", "Kılavuz adı veya yaş grubu boş")
                 return@launch
             }
 
             try {
-                firestore.collection("kilavuzlar").add(guide).await()
+                val currentKilavuzlar = _kilavuzlar.value?.toMutableList() ?: mutableListOf()
+                currentKilavuzlar.add(guide)  // Yeni kılavuzu ekliyoruz
+                _kilavuzlar.postValue(currentKilavuzlar)  //
                 Log.d("KilavuzEkle", "Kılavuz başarıyla eklendi")
             } catch (e: Exception) {
                 Log.e("KilavuzEkle", "Kılavuz ekleme başarısız: ${e.message}", e)
@@ -88,34 +130,5 @@ class AdminViewModel : ViewModel() {
         }
     }
 
-    fun TahlilEkle(hastaId: String, tahlil: Tahlil) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (hastaId.isEmpty() || isTahlilEmpty(tahlil)) {
-                Log.e("TahlilEkle", "Hasta ID boş veya tahlil verileri eksik")
-                return@launch
-            }
 
-            try {
-                firestore.collection("users")
-                    .document(hastaId)
-                    .collection("tahlil")
-                    .add(tahlil)
-                    .await()
-
-                Log.d("TahlilEkle", "Tahlil başarıyla eklendi")
-            } catch (e: Exception) {
-                Log.e("TahlilEkle", "Tahlil ekleme başarısız: ${e.message}", e)
-            }
-        }
-    }
-
-    private fun isTahlilEmpty(tahlil: Tahlil): Boolean {
-        return tahlil.IgA.isEmpty() &&
-                tahlil.IgG.isEmpty() &&
-                tahlil.IgG1.isEmpty() &&
-                tahlil.IgG2.isEmpty() &&
-                tahlil.IgG3.isEmpty() &&
-                tahlil.IgG4.isEmpty() &&
-                tahlil.IgM.isEmpty()
-    }
 }

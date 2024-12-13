@@ -11,10 +11,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 
 
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+
+import androidx.compose.ui.unit.dp
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +49,11 @@ fun HastaDetayPage(
         Text("Hasta Yaşı: ${hasta.value?.age}")
 
         Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {navController.navigate("degerAra")}){
+            Text("Değer Ara")
+
+        }
+
 
         Text("Tahlil Detayları", style = MaterialTheme.typography.bodySmall)
 
@@ -70,13 +80,9 @@ fun HastaDetayPage(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = { navController.navigate("tahlilekle") },
-            modifier = Modifier.fillMaxWidth(0.5f)
-        ) {
-            Text("Tahlil Ekle")
-        }
+
     }
 }
+
+
