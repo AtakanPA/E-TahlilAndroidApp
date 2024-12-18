@@ -120,6 +120,14 @@ class AdminViewModel : ViewModel() {
             }
 
             try {
+                firestore.collection("kilavuzlar")
+                    .add(guide)
+                    .addOnSuccessListener {
+                        Log.d("KilavuzEkle", "Kılavuz başarıyla eklendi: ${it.id}")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("KilavuzEkle", "Kılavuz ekleme başarısız: ${guide.name}", e)
+                    }
                 val currentKilavuzlar = _kilavuzlar.value?.toMutableList() ?: mutableListOf()
                 currentKilavuzlar.add(guide)  // Yeni kılavuzu ekliyoruz
                 _kilavuzlar.postValue(currentKilavuzlar)  //
