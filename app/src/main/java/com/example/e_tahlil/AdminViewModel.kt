@@ -92,7 +92,7 @@ class AdminViewModel : ViewModel() {
             null
         }
     }
-    private suspend fun KilavuzlariGetir():List<Guide>? {
+  /*  private suspend fun KilavuzlariGetir():List<Guide>? {
 
         return try {
 
@@ -111,7 +111,7 @@ class AdminViewModel : ViewModel() {
             null
         }
 
-    }
+    }*/
     fun KilavuzEkle(guide: Guide) {
         viewModelScope.launch(Dispatchers.IO) {
             if (guide.name.isEmpty() || guide.degerler.isEmpty()) {
