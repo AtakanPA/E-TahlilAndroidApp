@@ -20,7 +20,7 @@ import androidx.navigation.NavController
 import com.example.e_tahlil.AdminViewModel
 import com.example.e_tahlil.AuthState
 import com.example.e_tahlil.AuthViewModel
-import com.example.e_tahlil.guides
+
 
 @Composable
 fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel,adminView: AdminViewModel) {
@@ -58,14 +58,7 @@ fun AdminHomePage(modifier: Modifier = Modifier, navController: NavController, a
 
 
         }
-            Button({
-                adminView.KilavuzEkle(guides)
-            },modifier=Modifier.fillMaxWidth(0.5f)) {
 
-
-                Text("Test Veri Ekle")
-
-            }
            Button({
                navController.navigate("hastaara")
            },modifier=Modifier.fillMaxWidth(0.5f)) {

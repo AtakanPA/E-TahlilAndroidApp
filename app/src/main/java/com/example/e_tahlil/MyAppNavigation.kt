@@ -57,9 +57,11 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navC
 
 
         }
-        composable("hastadetay")
-        {
-            HastaDetayPage(navController, authViewModel, adminViewModel, modifier = modifier)
+        composable("hastadetay/{dogumtarihi}")
+        {backStackEntry->
+            val dogumTarihi=backStackEntry.arguments?.getString("dogumtarihi")
+
+            HastaDetayPage(navController, authViewModel, adminViewModel, modifier = modifier,dogumTarihi)
 
         }
 
@@ -69,9 +71,10 @@ fun MyAppNavigation(modifier:Modifier=Modifier,authViewModel: AuthViewModel,navC
 
 
         }
-        composable("degerara"){
-
-            DegerAraPage(modifier,navController,authViewModel,adminViewModel)
+        composable("degerara/{dogumTarihi}"){
+                backStackEntry->
+            val dogumTarihi=backStackEntry.arguments?.getString("dogumtarihi")
+            DegerAraPage(modifier,navController,authViewModel,adminViewModel,dogumTarihi)
 
 
         }

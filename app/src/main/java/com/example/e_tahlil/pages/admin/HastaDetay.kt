@@ -36,7 +36,9 @@ fun HastaDetayPage(
     navController: NavController,
     authViewModel: AuthViewModel,
     adminViewModel: AdminViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    dogumTarihi: String?,
+
 ) {
     val hasta = adminViewModel.hasta.observeAsState()
 
@@ -46,10 +48,10 @@ fun HastaDetayPage(
     ) {
         Text("Hasta Adı: ${hasta.value?.name}")
         Text("Hasta Soyadı: ${hasta.value?.surname}")
-        Text("Hasta Yaşı: ${hasta.value?.age}")
+        Text("Hasta Yaşı: ${dogumTarihi}")
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {navController.navigate("degerAra")}){
+        Button(onClick = {navController.navigate("degerAra/$dogumTarihi")}){
             Text("Değer Ara")
 
         }

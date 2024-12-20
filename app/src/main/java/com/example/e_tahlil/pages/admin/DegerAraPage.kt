@@ -22,7 +22,11 @@ import com.example.e_tahlil.AdminViewModel
 import com.example.e_tahlil.AuthViewModel
 
 @Composable
-fun DegerAraPage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel, adminViewModel: AdminViewModel){
+fun DegerAraPage(modifier: Modifier = Modifier,
+                 navController: NavController,
+                 authViewModel: AuthViewModel,
+                 adminViewModel: AdminViewModel,
+                 dogumTarihi: String?){
 
 
 
